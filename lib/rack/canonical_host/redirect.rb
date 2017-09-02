@@ -7,9 +7,9 @@ module Rack
       HTML_TEMPLATE = <<-HTML.gsub(/^\s+/, '')
         <!DOCTYPE html>
         <html lang="en-US">
-          <head><title>301 Moved Permanently</title></head>
+          <head><title>Document Moved</title></head>
           <body>
-            <h1>Moved Permanently</h1>
+            <h1>Document Moved</h1>
             <p>The document has moved <a href="%s">here</a>.</p>
           </body>
         </html>
@@ -21,6 +21,7 @@ module Rack
         self.ignore = Array(options[:ignore])
         self.conditions = Array(options[:if])
         self.cache_control = options[:cache_control]
+        self.status = options[:status] || 301
       end
 
       def canonical?
@@ -29,7 +30,7 @@ module Rack
       end
 
       def response
-        [301, headers, [HTML_TEMPLATE % new_url]]
+        [status, headers, [HTML_TEMPLATE % new_url]]
       end
 
     protected
@@ -39,6 +40,7 @@ module Rack
       attr_accessor :ignore
       attr_accessor :conditions
       attr_accessor :cache_control
+      attr_accessor :status
 
     private
 
